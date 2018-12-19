@@ -1,6 +1,6 @@
 ---
 - name: Configure | Check if etcd cluster is healthy
-  shell: "{{ bin_dir }}/etcdctl --endpoints={{ etcd_access_addresses }} cluster-health | grep -q 'cluster is healthy'"
+  shell: "{{ bin_dir }}/etcdctl --endpoints={{ etcd_addresses }} cluster-health | grep -q 'cluster is healthy'"
   register: etcd_cluster_is_healthy
   ignore_errors: true
   changed_when: false
@@ -63,12 +63,12 @@
   when: is_etcd_master and etcd_events_cluster_setup
 
 - name: Configure | Check if etcd cluster is healthy
-  shell: "{{ bin_dir }}/etcdctl --endpoints={{ etcd_access_addresses }} cluster-health | grep -q 'cluster is healthy'"
+  shell: "{{ bin_dir }}/etcdctl --endpoints={{ etcd_addresses }} cluster-health | grep -q 'cluster is healthy'"
   register: etcd_cluster_is_healthy
   until: etcd_cluster_is_healthy.rc == 0
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
-  ignore_errors: false
+  ignore_errors: no
   changed_when: false
   check_mode: no
   when: is_etcd_master and etcd_cluster_setup

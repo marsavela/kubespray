@@ -6,10 +6,16 @@
     kubectl: "{{ bin_dir }}/kubectl"
     resource: "{{ item }}"
     state: absent
+  retries: 3
+  delay: 40
+  loop_control:
+    pause: 10
   with_items:
     - 'deploy'
     - 'configmap'
     - 'svc'
+  loop_control:
+    pause: 10
   tags:
     - upgrade
 
@@ -20,6 +26,10 @@
     kubectl: "{{ bin_dir }}/kubectl"
     resource: "deploy"
     state: absent
+  retries: 3
+  delay: 10
+  loop_control:
+    pause: 10
   when:
     - kubeadm_enabled|default(false)
     - kubeadm_init is defined
@@ -33,6 +43,10 @@
     kubectl: "{{ bin_dir }}/kubectl"
     resource: "{{ item }}"
     state: absent
+  retries: 3
+  delay: 10
+  loop_control:
+    pause: 10
   with_items:
     - 'deploy'
     - 'svc'
@@ -46,6 +60,10 @@
     kubectl: "{{ bin_dir }}/kubectl"
     resource: "{{ item }}"
     state: absent
+  retries: 3
+  delay: 10
+  loop_control:
+    pause: 10
   with_items:
     - 'deploy'
     - 'svc'
@@ -62,5 +80,9 @@
     kubectl: "{{ bin_dir }}/kubectl"
     resource: "deploy"
     state: absent
+  retries: 3
+  delay: 10
+  loop_control:
+    pause: 10
   tags:
     - upgrade

@@ -39,7 +39,7 @@ spec:
     - --audit-policy-file={{ audit_policy_file }}
 {% endif %}
     - --advertise-address={{ ip | default(ansible_default_ipv4.address) }}
-    - --etcd-servers={{ etcd_access_addresses }}
+    - --etcd-servers={{ etcd_addresses }}
 {%   if etcd_events_cluster_enabled %}
     - --etcd-servers-overrides=/events#{{ etcd_events_access_addresses_semicolon }}
 {% endif %}

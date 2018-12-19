@@ -63,6 +63,10 @@
     --delete-local-data {{ inventory_hostname }}
     {% if drain_pod_selector != "" %}--pod-selector '{{ drain_pod_selector }}'{% endif %}
   delegate_to: "{{ groups['kube-master'][0] }}"
+  retries: 10
+  delay: 3
+  register: result
+  until: result.rc == 0
   when:
     - drain_nodes
     - needs_cordoning

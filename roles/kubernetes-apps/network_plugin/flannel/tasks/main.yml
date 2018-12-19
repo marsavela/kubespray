@@ -7,6 +7,10 @@
     resource: "{{item.item.type}}"
     filename: "{{kube_config_dir}}/{{item.item.file}}"
     state: "latest"
+  retries: 3
+  delay: 3
+  loop_control:
+    pause: 10
   with_items: "{{ flannel_node_manifests.results }}"
   when: inventory_hostname == groups['kube-master'][0] and not item is skipped
 
