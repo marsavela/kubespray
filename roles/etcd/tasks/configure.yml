@@ -68,7 +68,7 @@
   until: etcd_cluster_is_healthy.rc == 0
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
-  ignore_errors: false
+  ignore_errors: yes
   changed_when: false
   check_mode: no
   when: is_etcd_master and etcd_cluster_setup
