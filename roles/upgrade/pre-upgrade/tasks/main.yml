@@ -6,6 +6,9 @@
      {{ bin_dir }}/kubectl get node {{ inventory_hostname }}
      -o jsonpath='{ range .status.conditions[?(@.type == "Ready")].status }{ @ }{ end }'
   register: kubectl_node_ready
+  retries: 10
+  delay: 3
+  until: kubectl_node_ready.rc == 0
   delegate_to: "{{ groups['kube-master'][0] }}"
   failed_when: false
   changed_when: false
@@ -17,6 +20,9 @@
      {{ bin_dir }}/kubectl get node {{ inventory_hostname }}
      -o jsonpath='{ .spec.unschedulable }'
   register: kubectl_node_schedulable
+  retries: 10
+  delay: 3
+  until: kubectl_node_schedulable.rc == 0
   delegate_to: "{{ groups['kube-master'][0] }}"
   failed_when: false
   changed_when: false
@@ -33,10 +39,18 @@
   command: "{{ bin_dir }}/kubectl cordon {{ inventory_hostname }}"
   delegate_to: "{{ groups['kube-master'][0] }}"
   when: needs_cordoning
+  retries: 10
+  delay: 3
+  register: result
+  until: result.rc == 0
 
 - name: Check kubectl version
   command: "{{ bin_dir }}/kubectl version --client --short"
   register: kubectl_version
+  retries: 10
+  delay: 3
+  register: result
+  until: kubectl_version.rc == 0
   delegate_to: "{{ groups['kube-master'][0] }}"
   run_once: yes
   changed_when: false
